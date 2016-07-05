@@ -1,0 +1,82 @@
+
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: i386-w64-mingw32/i386 (32-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> library("R.matlab")
+Loading required package: R.oo
+Loading required package: R.methodsS3
+R.methodsS3 v1.4.2 (2012-06-22) successfully loaded. See ?R.methodsS3 for help.
+R.oo v1.13.0 (2013-03-08) successfully loaded. See ?R.oo for help.
+
+Attaching package: 'R.oo'
+
+The following object is masked from 'package:methods':
+
+    getClasses, getMethods
+
+The following object is masked from 'package:base':
+
+    attach, detach, gc, load, save
+
+R.matlab v1.7.0 (2013-04-15) successfully loaded. See ?R.matlab for help.
+
+Attaching package: 'R.matlab'
+
+The following object is masked from 'package:base':
+
+    getOption, isOpen
+
+> library("glmnet")
+Loading required package: Matrix
+Loading required package: lattice
+Loaded glmnet 1.9-3
+
+> 
+> a <- readMat("temp.mat")
+Loading required package: R.utils
+Warning message:
+In library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE,  :
+  there is no package called 'R.utils'
+> if (a$standardize) {
++    print("Standardized")
++ }
+> if (a$intercept) {
++    print("Intercept")
++ }
+> x <- proc.time()
+> fit = glmnet(a$X,a$y,family=a$type,standardize=a$standardize,intercept=a$intercept,alpha=a$alpha,nlambda=a$nlambda)
+> t <- proc.time()-x
+> 
+> if (is.list(fit$beta)) {
++    print("is a list")
++    b<-as(fit$beta[[1]],"matrix")
++    for (i in 2:length(fit$beta)) {
++       b <- rbind(b,as(fit$beta[[i]],"matrix"))
++    }
++    fit$beta <- b
++ } else {
++    print("not a list")
++ }
+[1] "not a list"
+>   
+> writeMat("tempout.mat",a0=fit$a0, beta=fit$beta, dev=fit$dev.ratio,
++  df=fit$df, lambda=fit$lambda, nulldev=fit$nulldev, elapsed=t )
+> 
+> proc.time()
+   user  system elapsed 
+   6.80    0.51   12.12 

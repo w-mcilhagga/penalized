@@ -1,0 +1,25 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: input   start ] */
+diff(y*log(p)+(n-y)*log(1-p),p);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+In the multinomial model, we have y=n
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+m: subst(y,n,%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+V: subst(p*(1-p)*y +(y*p)^2,y^2,m^2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(V);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

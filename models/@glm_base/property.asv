@@ -1,0 +1,16 @@
+function p = property(m, name)
+% PROPERTY returns a structure or properties, or a single one
+% usage: p = property(model)
+%        p = property(model, name)
+%
+% Mostly for internal use.
+
+if nargin==2
+    p = p.(name);
+end
+p = struct('n',size(m.X,1), 'p', size(m.X,2), 'intercept', m.intercept, ...
+    'colmeans', m.colmeans, 'colnorms', m.colnorms, ...
+    'standardized', m.standardized );
+
+
+    

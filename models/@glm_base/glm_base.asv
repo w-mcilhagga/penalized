@@ -1,0 +1,51 @@
+function m = glm_base(y, X, varargin)
+% GLM_BASE is a base class object for generalized linear models.
+%
+% Usage:
+%   m = glm_base(y, X, ...)
+%
+% Inputs:
+%   y  : a vector of observations
+%   X  : a matrix of covariates
+%   ... : keywords. Choose from 'nointercept' and 'standardize'
+%
+% Outputs:
+%   m  : a glm_base object
+%
+% Notes:
+%  As glm_base is a base class, you shouldn't use it directly
+
+% initialize model
+m.y = y;
+m.X = X;
+m.colnorms = [];
+m.colmeans = [];
+m.standardized = 0;
+m.intercept = [];
+
+% standardize
+if strfound('standardize', varargin)
+    m.colnorms = sqrt(sum(X.^2));
+    m.X = bsxfun(@rdivide, m.X, m.colnorms);
+    m.standardized = true;
+else
+    m.colnorms = ones(1,size(X,2));
+    m.standardized = false;
+end
+
+% intercept
+if strfound('nointercept', varargin)
+    m.intercept = [];
+    m.colmeans = 0;
+else
+    if strfound('center',varargin) || strfound('centre', varargin)
+        m.colmeans = mean(m.X,1);
+    else
+        m.colmeans = 0;
+    end
+    m.X = [ones(size(X,1),1),bsxfun(@minus,m.X,m.colmeans)];
+    m.intercept = 1;
+    m.colnorms = [1, m.colnorms];
+end
+
+m = class(m,'glm_base');
